@@ -39,7 +39,7 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
- const express = require('express');
+const express = require('express');
   const bodyParser = require('body-parser');
   const port = 3000;
   
@@ -73,6 +73,17 @@
     res.status(201).send(idjson);
   });
   
+  app.put('/todos/:id', (req, res) => {
+
+    const updatedTodoid = req.params.todoid;
+    const updatedTodo = {id: req.params.todoid,title: req.body.title, completed: req.body.completed, description: req.body.description };
+    const index = todolists.findIndex(todo => todo.id === updatedTodoid);
+if (index !== -1) {
+  todolists[index] = updatedTodo;
+}
+    res.status(200).send(todolists);
+  });
+
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
