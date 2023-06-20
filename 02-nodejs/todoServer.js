@@ -39,11 +39,41 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-app.use(bodyParser.json());
-
-module.exports = app;
+ const express = require('express');
+  const bodyParser = require('body-parser');
+  const port = 3000;
+  
+  const app = express();
+  
+  app.use(bodyParser.json());
+  
+  let todolists = [
+    { id: 1, title: "Task 1",completed: "true",description: "Description 1" },
+    { id: 2, title: "Task 2",completed: "true", description: "Description 2" },
+    { id: 3, title: "Task 3",completed: "false", description: "Description 3" }
+  ];
+  
+  app.get('/todos', (req, res) => {
+    res.status(200).send(todolists);
+  });
+  
+  app.get('/todos/:todoid', (req, res) => {
+    var desiredId = req.params.todoid;  // Access the route parameter
+    var filteredTodos = todolists.filter(function(todo) {
+      return todo.id == desiredId;
+    });
+    res.status(200).send(filteredTodos);
+  });
+  
+  app.post('/todos', (req, res) => {
+    const todoid = todolists.length + 1
+    const newTodo = {id: todoid,title: req.body.title, completed: req.body.completed, description: req.body.description };
+    todolists.push(newTodo);
+    let idjson = {id : todoid}
+    res.status(201).send(idjson);
+  });
+  
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+  
