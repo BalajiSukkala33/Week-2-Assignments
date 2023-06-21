@@ -30,8 +30,40 @@
  */
 
 const express = require("express")
-const PORT = 3000;
+const port = 3000;
 const app = express();
-// write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
+usersData = [{ userName: "Balaji77", password: "bub77", firstName: "Balaji",lastName:"Sukkala" },
+{userName: "Balaji76", password: "bub76", firstName: "Balaj",lastName:"Sukkal" },
+{userName: "Balaji75", password: "bub75", firstName: "Bala",lastName:"Sukka" }];
+// write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
+app.post('/signup', (req, res) => {
+  const newUser = {id: Math.floor(Math.random() * 1000000),
+    userName : req.body.userName,
+  password : req.body.password,
+firstName : req.body.firstName,
+lastName : req.body.lastName}
+
+function usernameChecker(newUser){
+  for(let i=0;i<usersData.length;i++){
+      if(usersData[i].userName === newuser.userName){
+          return false;
+      }
+       
+  }
+  return true;
+
+}
+
+if(usernameChecker(newUser)){ 
+  UsersData.push(newUser);
+  res.send(UsersData);}
+else{res.status(400).send();}
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 module.exports = app;
