@@ -58,11 +58,14 @@ const express = require('express');
   });
   
   app.get('/todos/:todoid', (req, res) => {
-    var desiredId = req.params.todoid;  // Access the route parameter
-    var filteredTodos = todolists.filter(function(todo) {
-      return todo.id == desiredId;
-    });
-    res.status(200).send(filteredTodos);
+    var desiredId = parseInt(req.params.todoid);  // Access the route parameter
+    const founditem = todolists.find(todo => todo.id ===desiredId);
+    if(founditem){
+      res.status(200).send(founditem);
+    }
+    else{
+      res.status(404).send("404 Page not found")
+    }
   });
   
   app.post('/todos', (req, res) => {
@@ -75,13 +78,22 @@ const express = require('express');
   
   app.put('/todos/:id', (req, res) => {
 
-    const updatedTodoid = req.params.todoid;
-    const updatedTodo = {id: req.params.todoid,title: req.body.title, completed: req.body.completed, description: req.body.description };
-    const index = todolists.findIndex(todo => todo.id === updatedTodoid);
-if (index !== -1) {
-  todolists[index] = updatedTodo;
-}
+    const indextoupdate = parseInt(req.params.id);
+    const updatedTodo = {id: req.params.id,title: req.body.title, completed: req.body.completed, description: req.body.description };
+    todolists[indextoupdate] = updatedTodo
     res.status(200).send(todolists);
+  });
+
+  app.delete('/todos/:id', (req, res) => {
+
+    const indextodelete = req.params.id;
+    todolists.splice(indextodelete,1)
+    res.status(200).send(todolists);
+  });
+
+
+  app.use((req, res) => {
+    res.status(404).send('404 Not Found');
   });
 
   app.listen(port, () => {
